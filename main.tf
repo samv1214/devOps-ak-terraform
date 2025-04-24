@@ -2,13 +2,13 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_vpc" "main" {
+/*resource "aws_vpc" "main" {
   cidr_block = "172.16.0.0/16"
   instance_tenancy = "default"
   tags = {
     Name = "main"
   }
-}
+}*/
 
 #Create security group with firewall rules
 resource "aws_security_group" "jenkins-sg-2022" {
@@ -50,4 +50,16 @@ resource "aws_instance" "myFirstInstance" {
   tags= {
     Name = var.tag_name
   }
+}
+
+terraform {
+  backend "s3" {
+    #Replace this with your bucket name!
+    bucket         = "myterraform-ak3"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    #Replace this with your DynamoDB table name!
+    dynamodb_table = "myterraform-statefile"
+    encrypt        = true
+    }
 }
